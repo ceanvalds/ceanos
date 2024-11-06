@@ -1,9 +1,10 @@
-#include "cpuinfo.h"
+#include <stdlib/stdio.h>
+#include <cpuinfo.h>
 
-void get_detailed_cpu_info(CPUinfo* cpu_info) {
+void get_cpu_info(CPUinfo* cpu_info) {
     uint32_t eax, ebx, ecx, edx;
     
-    // Get vendor ID
+    // get vendor ID
     asm volatile ("cpuid" 
         : "=a"(eax), "=b"(ebx), "=c"(ecx), "=d"(edx) 
         : "a"(0));
@@ -13,7 +14,7 @@ void get_detailed_cpu_info(CPUinfo* cpu_info) {
     *((uint32_t*)&cpu_info->vendor[8]) = ecx;
     cpu_info->vendor[12] = '\0';
     
-    // Get processor info and feature bits
+    // get processor info and feature bits
     asm volatile ("cpuid"
         : "=a"(eax), "=b"(ebx), "=c"(ecx), "=d"(edx)
         : "a"(1));
@@ -23,4 +24,12 @@ void get_detailed_cpu_info(CPUinfo* cpu_info) {
     cpu_info->stepping = eax & 0xF;
     cpu_info->extended_model = (eax >> 16) & 0xF;
     cpu_info->extended_family = (eax >> 20) & 0xFF;
+
+    printf("CPU vendor: %s\n", cpu_info->vendor);
+    printf("model: %u\n", cpu_info->model);
+    printf("family: %u\n", cpu_info->family);
+    printf("stepping: %u\n", cpu_info->stepping);
+    printf("extended model: %u\n", cpu_info->extended_model);
+    printf("extended family: %u\n", cpu_info->extended_family);
 } 
+
