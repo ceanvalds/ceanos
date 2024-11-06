@@ -26,10 +26,9 @@ void get_cpu_info(CPUinfo* cpu_info) {
     cpu_info->extended_family = (eax >> 20) & 0xFF;
 
     printf("CPU vendor: %s\n", cpu_info->vendor);
-    printf("model: %u\n", cpu_info->model);
-    printf("family: %u\n", cpu_info->family);
-    printf("stepping: %u\n", cpu_info->stepping);
-    printf("extended model: %u\n", cpu_info->extended_model);
-    printf("extended family: %u\n", cpu_info->extended_family);
-} 
-
+    printf("model: %d\n", cpu_info->model);
+    printf("family: %d\n", cpu_info->family);
+    printf("stepping: %d\n", cpu_info->stepping);
+    printf("extended model: %d\n", cpu_info->extended_model);
+    printf("extended family: %d\n", cpu_info->extended_family);
+}
