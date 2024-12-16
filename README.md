@@ -83,10 +83,10 @@ Here’s what I’m working on:
   - [ ] Power states (sleep, hibernate)
   - [ ] Battery management for portable devices
 - **Other:**
-  - [ ] PCI (work in progress)
+  - [x] PCI (work in progress)
 ### **Userland**
 - [ ] Minimal shell (interactive terminal)
-- [ ] Core utilities (e.g., ls, cd, mkdir, rm, echo)
+- [ ] Core utilities
 - [ ] Package manager (eventually)
 - [ ] Multitasking user applications
 - [ ] System services (e.g., logging, daemon management)
@@ -124,8 +124,7 @@ Here’s what I’m working on:
 - [ ] Cross-compilation support
 
 ### **Long-Term Vision**
-- [ ] Support for virtualized environments 
-- [ ] Compatibility with Linux ABI for some applications
+- [ ] Support for virtualized environments
 - [ ] Distributed computing capabilities
 - [ ] Experimental features
 - [ ] Self-hosting

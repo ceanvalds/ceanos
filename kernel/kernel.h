@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #define VERSION "0.04 RC1"
+#define new(type) kmalloc(sizeof(type))
 
 extern char *__terry[];
 extern const size_t __TERRY_ARRAY_SIZE; 

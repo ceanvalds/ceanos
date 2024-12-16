@@ -18,7 +18,7 @@ int init_devices(){
         vfs_mkdir(root_node, "dev", 0777);
         vfs_close(root_node);
 
-        init_serial_dev();
+        //init_serial_dev();
 
         __printf("[dev] OK\n");
 }

@@ -99,6 +99,7 @@ static void init_all(struct multiboot_info* boot)
 	init_tmpfs();
 
         init_devices(); 
+        InitPci();
 
 	__printf("[ceanos] OK\n");
 
