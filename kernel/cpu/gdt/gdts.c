@@ -2,7 +2,8 @@
 #include <util.h>
 #include <drivers/video/vga/vga.h>
 
-extern void gdt_flush(uint32_t);
+#define GDT_DATA_SEGMENT 0x10
+
 extern void tss_flush();
 
 struct gdt_entry_struct gdt_entries[6];
@@ -57,4 +58,29 @@ void setGdtGate(uint32_t num, uint32_t base, uint32_t limit, uint8_t access, uin
 	gdt_entries[num].access = access;
 }
 
+void gdt_flush(struct gdt_ptr_struct* gdt_ptr)
+{
+  __asm__ volatile(
+    "lgdt (%0)\n" // Loading gdt
 
+    "ljmp $0x08, $.Lflush\n" // Far Jump for CS register
+
+    ".Lflush:\n"
+
+    /*
+     *
+     * Segment registers config
+     *
+     */
+
+    "movw %1, %%ax\n"
+    "movw %%ax, %%es\n"
+    "movw %%ax, %%ss\n"
+    "movw %%ax, %%ds\n"
+    "movw %%ax, %%fs\n"
+    "movw %%ax, %%gs\n"
+    :
+    :"r"(gdt_ptr), "i"(GDT_DATA_SEGMENT) 
+    : "%ax"
+  );
+}
