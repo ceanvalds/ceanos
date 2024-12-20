@@ -12,54 +12,54 @@ vfs_node *vfs_root_node;
 
 int vfs_init()
 { 
-    if(vfs_root_node != NULL) {
-        debugf("[vfs] vfs is already initialized !\n");
-        return -1;
-    }
+        if(vfs_root_node != NULL) {
+            debugf("[vfs] vfs is already initialized !\n");
+            return -1;
+        }
 
-    //allocate space for the root node
-    vfs_root_node = kmalloc(sizeof(vfs_node));
-    debugf("[vfs] allocated space for 'vfs_root_node'!\n");
-    sleep(300);
+        //allocate space for the root node
+        vfs_root_node = kmalloc(sizeof(vfs_node));
+        debugf("[vfs] allocated space for 'vfs_root_node'!\n");
+        sleep(300);
 
-    //there isn't any kind of time in the kernel for the moment so
-    vfs_root_node->create_time = 0;
-    vfs_root_node->access_time = 0;
-    vfs_root_node->modify_time = 0;
+        //there isn't any kind of time in the kernel for the moment so
+        vfs_root_node->create_time = 0;
+        vfs_root_node->access_time = 0;
+        vfs_root_node->modify_time = 0;
 
-    //set all propreties
-    vfs_root_node->owner = 0;
-    vfs_root_node->group_owner = 0;
+        //set all propreties
+        vfs_root_node->owner = 0;
+        vfs_root_node->group_owner = 0;
 
-    vfs_root_node->children_count = 0;
+        vfs_root_node->children_count = 0;
 
-    vfs_root_node->driver = 0;
+        vfs_root_node->driver = 0;
 
-    vfs_root_node->permission = 0777;   //0777 = everyone can read and write
-    vfs_root_node->type = 0;
-    
-    //weird but on unix-like OS's the parent of root is root
-    //if you're on linux try cd / and cd ..
-    vfs_root_node->parent = vfs_root_node;
-    vfs_root_node->brother = NULL;
-    vfs_root_node->ref_count = 0;
+        vfs_root_node->permission = 0777;   //0777 = everyone can read and write
+        vfs_root_node->type = 0;
+        
+        //weird but on unix-like OS's the parent of root is root
+        //if you're on linux try cd / and cd ..
+        vfs_root_node->parent = vfs_root_node;
+        vfs_root_node->brother = NULL;
+        vfs_root_node->ref_count = 0;
 
-    vfs_root_node->read = NULL;
-    vfs_root_node->write = NULL;
-    vfs_root_node->open = NULL;
-    vfs_root_node->close = NULL;
-    vfs_root_node->create = NULL;
-    vfs_root_node->mkdir = NULL;
-    vfs_root_node->unlink = NULL;
-    vfs_root_node->set_size = NULL;
-    vfs_root_node->chown = NULL;
-    vfs_root_node->chmod = NULL;
+        vfs_root_node->read = NULL;
+        vfs_root_node->write = NULL;
+        vfs_root_node->open = NULL;
+        vfs_root_node->close = NULL;
+        vfs_root_node->create = NULL;
+        vfs_root_node->mkdir = NULL;
+        vfs_root_node->unlink = NULL;
+        vfs_root_node->set_size = NULL;
+        vfs_root_node->chown = NULL;
+        vfs_root_node->chmod = NULL;
 
-    __strcpy(vfs_root_node->name,"root");
-    
-    __printf("[vfs] OK\n");
-    sleep(100);
-    return SUCCESS;
+        __strcpy(vfs_root_node->name,"root");
+        
+        __printf("[vfs] OK\n");
+        sleep(100);
+        return SUCCESS;
 }
 
 struct dirrent *vfs_readdir(vfs_node *node, uint32_t index){

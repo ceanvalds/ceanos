@@ -26,9 +26,9 @@ SECTION .bss
 global kernel_stack_bottom
 global kernel_stack_top
 
-ALIGN 16
+align 16
 kernel_stack_bottom:
-    RESB 16384 * 8
+    resb 16384 * 8
 kernel_stack_top:
 
 section .boot

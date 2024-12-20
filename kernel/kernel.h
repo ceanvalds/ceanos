@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define VERSION "0.04 RC1"
+#define VERSION "0.04 RC2"
 #define new(type) kmalloc(sizeof(type))
 
 extern char *__terry[];

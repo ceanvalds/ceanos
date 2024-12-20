@@ -141,4 +141,4 @@ Read [this](Documentation/CONTRIBUTING.md)
 > No good ones yet ):
 
 ## License
-This project is licensed under GPL v3 (GNU General Public License v3.0). For more information, see the [LICENSE](LICENSE).
+This project is licensed under GPL v3. For more information see [LICENSE](LICENSE) 

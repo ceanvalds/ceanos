@@ -50,6 +50,11 @@
 #include <stdint.h>
 #include <util.h>
 #include <io.h>
+#include <kout/kout.h>
+
+/* OTHER */
+
+#include <stack/stacktrace.h>
 
 /* OPTIONS */
 #include <compiler.h>
@@ -59,9 +64,15 @@
 // actual code
 
 void main(uint32_t magic, struct multiboot_info* boot);
-char prompt[2] = "% ";
+char prompt[3] = "% ";
 
 bool debug_mode;
+        
+#define __ceanos__
+extern uint64_t ticks;
+
+extern uint8_t* kernel_stack_bottom[];
+extern uint8_t* kernel_stack_top[];
 
 // Initialize all the important stuff, like idt, gdt, etc
 
@@ -72,7 +83,9 @@ static void init_mm(struct multiboot_info* boot)
 	uint32_t physicalAllocStart = (mod1 + 0xFFF) & ~0xFFF;
 	initMemory(boot->mem_upper * 1024, physicalAllocStart);
 	kmallocInit(0x4000);
-    	debugf("[mm] memory done!\n");
+    	__printf("[mm] OK\n");
+
+        sleep(300);
 }
 
 static void init_tables()
@@ -85,26 +98,43 @@ static void init_all(struct multiboot_info* boot)
 {
 	#ifdef DEBUG
 	debug_mode = true;
-	#endif
+	koutd("debug_mode = 1");
+        #endif
 
 	vga_disable_cursor();
         
         init_tables();
+        __printf("[init_tables] OK\n");
+
+        __stack_trace();
 
 	timer_init();
-	keyboard_init();
 	init_mm(boot);
 
 	vfs_init();
 	init_tmpfs();
 
         init_devices(); 
-        InitPci();
+        //InitPci();
+        
+        #ifdef __ceanos__
+        __printf("__ceanos__ defined !!!\n");
+        #endif
+        
+        __printf("testing kout...\n\n");
+        sleep(50);
+        kout("kout test");
+        koutd("kout test");
+        koutw("kout test");
+        koute("kout test");
+        __printf("\ntesting kout done\n\n");
+        
+        __printf("kernel_stack_bottom: %p, kernel_stack_top: %p\n", kernel_stack_bottom, kernel_stack_top);
+        __printf("[ceanos] OK\n");
 
-	__printf("[ceanos] OK\n");
-
-	sleep(750);
+	sleep(750000);
 	Reset();
+	keyboard_init();
 }
 
 void enable_default(struct multiboot_info* boot)
@@ -122,18 +152,22 @@ void enable_default(struct multiboot_info* boot)
 
 public void main(uint32_t magic, struct multiboot_info* boot)
 {
-        #define __ceanos__
-                enable_default(boot);
-
-        extern uint64_t ticks;   
+        enable_default(boot);
+        uintptr_t current_sp;
 
 	while(1) {
-		// TODO: Add a way to check for stack overflows and other errors that the ISR can't handle
                 ticks++;
+                sleep(1000);
+
+                asm volatile("mov %%esp, %0" : "=r"(current_sp));
+                if (current_sp < (uintptr_t)kernel_stack_bottom || 
+                    current_sp >= (uintptr_t)kernel_stack_top) {
+                        panic("stack overflow lolol");
+                }
         };
 }
 
-char *__terry[] = { "CIA", "nigger", "its", "terry", "a", "is", "glowies", "car", "wtf", "fuck", "cool", "niggerville", "niggertopia", "ethan", "the", "schizophrenia", "chocolate", "ok", "God", "I", "am", "doctors", "fucking", "jedi", "HolyC", "TempleOS", "Terry Davis", "gay", "C", "you're", "gcc", "sucks", "hamburger", "smart", "smartest", "programmer", "that", "has", "ever", "live", "lived", "impossible", "possible", "linus", "torvalds", "mr.", ".", "?", "!", ",", "FBI", "data", "ghost", "default", "no", "yes", "are", "make", "way", "discord", "censers", "deafness", "medea", "windus", "submit", "remorse", "acquaintance", "succeded", "valuable", "fingers", "garden", "ceanos", "linux", "vim", "emacs", "do", "while", "keep", "anti-cia", "perpetuators", "thick", "america", "mafia", "computer", "IBM", "commodore-64", "compiler", "divine", "wisdom", "intellect", "minecraft", "ISS", "Feds", "Diddy", "Oil", "Baby", "war", "peace", "game", "Jesus", "Bible", "spartan", "IRS", "USA", "qwerty", "azerty", "qwertz", "imagine", "using", "windows", "ubuntu", "arch", "alpine", "nixos", "of course", "add", "tcp", "IP", "VPN", "protocol", "hymn", "array", "map", "go", "code", "stop", "wasting", "time", "king", "terrible", "I am King Terry the Terrible", "The CIA", "The CIA will be executed with an A10 gun, the fist of God", "fist", "of", "will", "be", "executed", "mental", "problems", "glow", "in", "dark", "you", "can", "see", "them", "if", "driving", "make", "gun", "half", "life", "chosen", "God's", "proceed", "say" };
+char *__terry[] = { "CIA", "its", "terry", "a", "is", "glowies", "car", "wtf", "fuck", "cool", "ethan", "the", "schizophrenia", "chocolate", "ok", "God", "I", "am", "doctors", "fucking", "jedi", "HolyC", "TempleOS", "Terry Davis", "gay", "C", "you're", "gcc", "sucks", "hamburger", "smart", "smartest", "programmer", "that", "has", "ever", "live", "lived", "impossible", "possible", "linus", "torvalds", "mr.", ".", "?", "!", ",", "FBI", "data", "ghost", "default", "no", "yes", "are", "make", "way", "discord", "censers", "deafness", "medea", "windus", "submit", "remorse", "acquaintance", "succeded", "valuable", "fingers", "garden", "ceanos", "linux", "vim", "emacs", "do", "while", "keep", "anti-cia", "perpetuators", "thick", "america", "mafia", "computer", "IBM", "commodore-64", "compiler", "divine", "wisdom", "intellect", "minecraft", "ISS", "Feds", "Diddy", "Oil", "Baby", "war", "peace", "game", "Jesus", "Bible", "spartan", "IRS", "USA", "qwerty", "azerty", "qwertz", "imagine", "using", "windows", "ubuntu", "arch", "alpine", "nixos", "of course", "add", "tcp", "IP", "VPN", "protocol", "hymn", "array", "map", "go", "code", "stop", "wasting", "time", "king", "terrible", "I am King Terry the Terrible", "The CIA", "The CIA will be executed with an A10 gun, the fist of God", "fist", "of", "will", "be", "executed", "mental", "problems", "glow", "in", "dark", "you", "can", "see", "them", "if", "driving", "make", "gun", "half", "life", "chosen", "God's", "proceed", "say", "MS" };
 
 const size_t __TERRY_ARRAY_SIZE = sizeof(__terry) / sizeof(__terry[0]);
 

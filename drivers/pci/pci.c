@@ -27,7 +27,7 @@ uint16_t pciConfigReadWord(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offs
 }
 
 uint32_t InitPci() {
-        vfs_node *dev = open("/dev");
+        vfs_node *dev = kopen("/dev");
         vfs_mkdir(dev, "pci", 555);                 //555 - only superusers (root)
         vfs_close(dev);
         

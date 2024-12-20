@@ -206,7 +206,6 @@ void keyboard_init()
 	capsLock = false;
 	idt_install(1, &keyboardHandler);
 	clear();
-	__printf("keyboard enabled\n");
 }
 
 
