@@ -7,7 +7,7 @@ ASMFLAGS = -f elf32
 LOOPDEV = loop4
 
 #get all c files
-C_SRC = $(shell find . -type f -name "*.c")
+C_SRC = $(shell find ./kernel -type f -name "*.c")
 
 #get all assembly files
 ASM_SRC = $(shell find . -type f -name "*.s")

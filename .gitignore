@@ -3,4 +3,4 @@
 *.iso
 *.swo
 *.orig
-./ceanos/kernel/vmcean
+vmcean

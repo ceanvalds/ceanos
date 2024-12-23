@@ -1,0 +1,1 @@
+apt install -y nasm xorriso mtools dosfstools
