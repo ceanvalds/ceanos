@@ -1,9 +1,11 @@
-#include <errno.h>
+#include "errno.h"
 #include "dev.h"
 #include <stdlib/stdio.h>
 #include <fs/vfs.h>
 #include "serial.h"
 #include <mm/malloc.h>
+#include "zero.h"
+#include "stdout.h"
 
 int init_devices(){
         //first create /dev directory
@@ -18,7 +20,9 @@ int init_devices(){
         vfs_mkdir(root_node, "dev", 0777);
         vfs_close(root_node);
 
-        //init_serial_dev();
+        init_serial_dev();
+	create_zero_dev();
+	create_stdout_dev();
 
         __printf("[dev] OK\n");
 }

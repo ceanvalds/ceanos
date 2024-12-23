@@ -114,7 +114,7 @@ static void init_all(struct multiboot_info* boot)
 	vfs_init();
 	init_tmpfs();
 
-        init_devices(); 
+        //init_devices(); 
         //InitPci();
         
         #ifdef __ceanos__
